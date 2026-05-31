@@ -202,6 +202,7 @@ def regresion(tipo):
     sample_text = '\n'.join(f'{x}, {y}' for x, y in DEFAULT_POINTS)
     
     if request.method == 'POST':
+        n_text = request.form.get('n', '')
         points_x = request.form.getlist('x[]')
         points_y = request.form.getlist('y[]')
         x_test_text = request.form.get('x_test', '')
@@ -225,6 +226,8 @@ def regresion(tipo):
             session['points_x'] = points_x
             session['points_y'] = points_y
             session['x_test'] = x_test_text
+            # Save n (number of points requested) in session
+            session['n'] = n_text
             session.modified = True
             
             model, equation, steps = get_regression(points, tipo)
@@ -248,6 +251,7 @@ def regresion(tipo):
     points_x = session.get('points_x', [''])
     points_y = session.get('points_y', [''])
     x_test = session.get('x_test', '')
+    n_value = session.get('n', '')
 
     return render_template('regresion.html',
                            tipo=tipo,
@@ -257,6 +261,7 @@ def regresion(tipo):
                            points_x=points_x,
                            points_y=points_y,
                            x_test=x_test,
+                           n_value=n_value,
                            regression_types=REGRESSION_TYPES)
 
 

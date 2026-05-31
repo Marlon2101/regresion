@@ -8,11 +8,14 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
       :root {
-        --primary-color: #667eea;
-        --primary-dark: #764ba2;
+        --brand-primary: #1f5e7e;
+        --brand-secondary: #244c7c;
+        --gold: #d7ad43;
         --accent-blue: #4facfe;
         --accent-cyan: #00f2fe;
-        --light-bg: #f8f9fa;
+        --glass-bg: rgba(255, 255, 255, 0.88);
+        --glass-border: rgba(255, 255, 255, 0.5);
+        --text-dark: #1a1a2e;
         --card-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
       }
 
@@ -23,49 +26,74 @@
       }
 
       body {
-        background: var(--light-bg);
+        background: linear-gradient(-45deg, #0f2027, #203a43, #2c5364, #244c7c);
+        background-size: 400% 400%;
+        animation: gradientBG 15s ease infinite;
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      }
+
+      @keyframes gradientBG {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
       }
 
       /* Navbar */
       .navbar-custom {
-        background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
-        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.2);
-        padding: 0;
+        background: rgba(23, 32, 51, 0.85);
+        backdrop-filter: blur(15px);
+        -webkit-backdrop-filter: blur(15px);
+        margin: 20px auto;
+        border-radius: 50px;
+        width: 95%;
+        max-width: 1200px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3), 0 0 15px rgba(215, 173, 67, 0.2);
+        border: 1px solid rgba(255,255,255,0.15);
+        padding: 10px 25px;
+        position: relative;
+        z-index: 10;
       }
 
       .navbar-custom .navbar-brand {
         font-size: 1.5rem;
         font-weight: 700;
-        color: white !important;
+        color: #fff !important;
         margin-right: 40px;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        background: linear-gradient(45deg, #ffffff, var(--gold));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+
+      .navbar-custom .navbar-brand i {
+        color: var(--gold);
+        -webkit-text-fill-color: initial;
+        margin-right: 10px;
+        animation: pulseIcon 2s infinite;
       }
 
       .navbar-custom .nav-link {
-        color: rgba(255, 255, 255, 0.85) !important;
-        margin: 0 10px;
-        font-weight: 500;
-        transition: all 0.3s ease;
-        border-radius: 6px;
-        padding: 8px 16px !important;
+        color: #e0e0e0 !important;
+        font-weight: 600;
+        border-radius: 30px;
+        padding: 8px 20px !important;
+        margin: 0 5px;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       }
 
-      .navbar-custom .nav-link:hover {
-        color: white !important;
-        background: rgba(255, 255, 255, 0.1);
-      }
-
+      .navbar-custom .nav-link:hover,
       .navbar-custom .nav-link.active {
-        color: white !important;
-        background: rgba(255, 255, 255, 0.2);
+        background: linear-gradient(45deg, var(--gold), #f3db7a);
+        color: #111 !important;
       }
 
       .header {
-        background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+        background: linear-gradient(135deg, var(--brand-primary) 0%, var(--brand-secondary) 100%);
         color: white;
         padding: 40px 0;
         margin-bottom: 40px;
-        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.2);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25);
       }
 
       .header h1 {
@@ -102,7 +130,7 @@
       }
 
       .card-header-custom {
-        background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+        background: linear-gradient(135deg, var(--brand-primary) 0%, var(--brand-secondary) 100%);
         color: white;
         padding: 25px;
         font-size: 1.3rem;
@@ -137,13 +165,13 @@
       }
 
       .form-control:focus {
-        border-color: var(--primary-color);
-        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        border-color: var(--brand-primary);
+        box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.12);
         outline: none;
       }
 
       .btn-submit {
-        background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+        background: linear-gradient(135deg, var(--brand-primary) 0%, var(--brand-secondary) 100%);
         border: none;
         color: white;
         font-weight: 600;
@@ -160,9 +188,9 @@
       }
 
       .btn-submit:hover {
-        background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-color) 100%);
+        background: linear-gradient(135deg, var(--brand-secondary) 0%, var(--brand-primary) 100%);
         transform: translateY(-2px);
-        box-shadow: 0 8px 16px rgba(102, 126, 234, 0.3);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.18);
         color: white;
       }
 
@@ -214,14 +242,14 @@
       }
 
       .equation-display {
-        background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
-        border-left: 4px solid var(--primary-color);
+        background: linear-gradient(135deg, rgba(123, 23, 32, 0.08) 0%, rgba(36, 76, 124, 0.08) 100%);
+        border-left: 4px solid var(--brand-primary);
         padding: 20px;
         border-radius: 8px;
         font-family: 'Courier New', monospace;
         font-size: 1.2rem;
         font-weight: 600;
-        color: var(--primary-dark);
+        color: var(--brand-secondary);
         margin-bottom: 20px;
         overflow-x: auto;
       }
@@ -334,7 +362,7 @@
       }
 
       .table-results thead {
-        background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+        background: linear-gradient(135deg, var(--brand-primary) 0%, var(--brand-secondary) 100%);
         color: white;
       }
 
@@ -390,8 +418,8 @@
       }
 
       .point-input-row input:focus {
-        border-color: var(--primary-color);
-        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        border-color: var(--brand-primary);
+        box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.12);
         outline: none;
       }
 
@@ -458,34 +486,8 @@
     </style>
   </head>
   <body>
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-custom">
-      <div class="container">
-        <a class="navbar-brand" href="/">
-          <i class="fas fa-chart-line"></i> Regresión
-        </a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-          <ul class="navbar-nav ms-auto">
-            <li class="nav-item">
-              <a class="nav-link" href="/">Portada</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link {% if tipo == 'lineal' %}active{% endif %}" href="/regresion/lineal">Lineal</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link {% if tipo == 'cuadratica' %}active{% endif %}" href="/regresion/cuadratica">Cuadrática</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link {% if tipo == 'exponencial' %}active{% endif %}" href="/regresion/exponencial">Exponencial</a>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </nav>
-
+    {% include 'navbar.html' %}
+    <div id="page-content">
     <!-- Header -->
     <div class="header">
       <div class="container">
@@ -516,6 +518,19 @@
           <div class="card-body-custom">
             <form method="post" id="regressionForm">
               <!-- Data Points Input -->
+              <div class="form-group">
+                <label for="n_input" class="form-label">Número de puntos (n)</label>
+                <input
+                  class="form-control"
+                  id="n_input"
+                  name="n"
+                  type="number"
+                  min="{{ 3 if tipo == 'cuadratica' else 2 }}"
+                  step="1"
+                  placeholder="Ej. 5"
+                  value="{{ n_value }}">
+              </div>
+
               <div class="form-group">
                 <label class="form-label">
                   Puntos (x, y)
@@ -652,57 +667,99 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-      // Data passed from Flask
-      const initialPointsX = {{ points_x|tojson }};
-      const initialPointsY = {{ points_y|tojson }};
+      window.pageInit = function() {
+        const initialPointsX = {{ points_x|tojson }};
+        const initialPointsY = {{ points_y|tojson }};
+        const initialN = {{ n_value|default('null')|tojson }};
+        const minN = {{ 3 if tipo == 'cuadratica' else 2 }};
 
-      function initializePoints() {
-        const container = document.getElementById('pointsContainer');
-        
-        // If we have saved points, load them
-        if (initialPointsX && initialPointsX.length > 0 && initialPointsX[0]) {
-          for (let i = 0; i < initialPointsX.length; i++) {
-            addPoint({x: initialPointsX[i], y: initialPointsY[i]});
+        function hasSavedPoints() {
+          if (!initialPointsX || initialPointsX.length === 0) return false;
+          return initialPointsX.some(v => v !== null && String(v).trim() !== '');
+        }
+
+        function initializePoints() {
+          const container = document.getElementById('pointsContainer');
+          if (!container) return;
+          while (container.firstChild) {
+            container.removeChild(container.firstChild);
           }
-        } else {
-          // Otherwise start with one empty
-          addPoint();
+          if (initialN !== null && String(initialN).trim() !== '') {
+            let rows = parseInt(initialN) || minN;
+            if (rows < minN) rows = minN;
+            for (let i = 0; i < rows; i++) addPoint();
+          } else if (hasSavedPoints()) {
+            for (let i = 0; i < initialPointsX.length; i++) {
+              addPoint({x: initialPointsX[i], y: initialPointsY[i]});
+            }
+          } else {
+            for (let i = 0; i < minN; i++) addPoint();
+          }
         }
-      }
 
-      function addPoint(point = null) {
-        const container = document.getElementById('pointsContainer');
-        
-        const row = document.createElement('div');
-        row.className = 'point-input-row';
-        row.innerHTML = `
-          <div>
-            <label class="point-input-label">X</label>
-            <input type="number" name="x[]" step="any" placeholder="Ej. 1" value="${point ? point.x : ''}">
-          </div>
-          <div>
-            <label class="point-input-label">Y</label>
-            <input type="number" name="y[]" step="any" placeholder="Ej. 2" value="${point ? point.y : ''}">
-          </div>
-          <button type="button" class="btn-remove-point" onclick="removePoint(this)">
-            <i class="fas fa-trash"></i>
-          </button>
-        `;
-        
-        container.appendChild(row);
-      }
+        function addPoint(point = null) {
+          const container = document.getElementById('pointsContainer');
+          if (!container) return;
+          const row = document.createElement('div');
+          row.className = 'point-input-row';
+          row.innerHTML = `
+            <div>
+              <label class="point-input-label">X</label>
+              <input type="number" name="x[]" step="any" placeholder="Ej. 1" value="${point ? point.x : ''}">
+            </div>
+            <div>
+              <label class="point-input-label">Y</label>
+              <input type="number" name="y[]" step="any" placeholder="Ej. 2" value="${point ? point.y : ''}">
+            </div>
+            <button type="button" class="btn-remove-point" onclick="removePoint(this)">
+              <i class="fas fa-trash"></i>
+            </button>
+          `;
+          container.appendChild(row);
+        }
 
-      function removePoint(button) {
-        const container = document.getElementById('pointsContainer');
-        if (container.children.length > 1) {
+        window.addPoint = addPoint;
+
+        window.removePoint = function(button) {
+          const container = document.getElementById('pointsContainer');
+          const nInput = document.getElementById('n_input');
+          const minRows = minN;
+          if (!container || container.children.length <= minRows) {
+            return;
+          }
           button.closest('.point-input-row').remove();
-        }
-      }
+          if (nInput && !isNaN(parseInt(nInput.value))) {
+            nInput.value = Math.max(minRows, container.children.length);
+          }
+        };
 
-      // Initialize on page load
-      document.addEventListener('DOMContentLoaded', function() {
+        const nInput = document.getElementById('n_input');
+        if (nInput) {
+          nInput.addEventListener('change', function() {
+            let desired = parseInt(nInput.value) || 0;
+            if (desired < minN) desired = minN;
+            const container = document.getElementById('pointsContainer');
+            while (container.children.length < desired) addPoint();
+            while (container.children.length > desired) {
+              container.lastElementChild.remove();
+            }
+          });
+        }
+
         initializePoints();
-      });
+      };
+
+      if (document.readyState === 'complete' || document.readyState === 'interactive') {
+        if (typeof window.pageInit === 'function') {
+          window.pageInit();
+        }
+      } else {
+        document.addEventListener('DOMContentLoaded', function() {
+          if (typeof window.pageInit === 'function') {
+            window.pageInit();
+          }
+        });
+      }
     </script>
   </body>
 </html>

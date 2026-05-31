@@ -15,8 +15,8 @@
 
     <style>
         :root {
-            --brand-primary: #7b1720; /* Rojo UNICAES */
-            --brand-secondary: #244c7c; /* Azul oscuro */
+            --brand-primary: #1f5e7e;
+            --brand-secondary: #244c7c;
             --gold: #d7ad43;
             --glass-bg: rgba(255, 255, 255, 0.88);
             --glass-border: rgba(255, 255, 255, 0.5);
@@ -29,7 +29,7 @@
             font-family: 'Poppins', sans-serif;
             color: var(--text-dark);
             /* Fondo degradado animado llamativo */
-            background: linear-gradient(-45deg, #0f2027, #203a43, #2c5364, #7b1720);
+            background: linear-gradient(-45deg, #0f2027, #203a43, #2c5364, #244c7c);
             background-size: 400% 400%;
             animation: gradientBG 15s ease infinite;
             padding-bottom: 50px;
@@ -421,34 +421,8 @@
     <div class="bg-shape shape1"></div>
     <div class="bg-shape shape2"></div>
 
-    <!-- Navbar con título modificado "Parcial Final" -->
-    <nav class="navbar navbar-expand-lg navbar-custom animate__animated animate__fadeInDown">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="/">
-                <i class="fas fa-graduation-cap"></i> Parcial Final
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" style="border-color: rgba(255,255,255,0.5);">
-                <span class="navbar-toggler-icon" style="filter: invert(1);"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link active" href="/"><i class="fas fa-home"></i> Portada</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/regresion/lineal"><i class="fas fa-chart-line"></i> Lineal</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/regresion/cuadratica"><i class="fas fa-chart-area"></i> Cuadrática</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/regresion/exponencial"><i class="fas fa-superscript"></i> Exponencial</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
-
+    {% include 'navbar.html' %}
+    <div id="page-content">
     <main class="container">
         <!-- Portada Principal -->
         <section class="glass-container text-center animate__animated animate__zoomIn">
