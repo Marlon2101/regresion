@@ -3,36 +3,30 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{{ regression_name }} - Regresión</title>
+    <title>Regresión Lineal Simple</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     
     <style>
         :root {
             --brand-primary: #1f5e7e;
             --brand-secondary: #244c7c;
             --gold: #d7ad43;
-            --accent-blue: #4facfe;
-            --accent-cyan: #00f2fe;
-            --glass-bg: rgba(255, 255, 255, 0.88);
+            --glass-bg: rgba(255, 255, 255, 0.92);
             --glass-border: rgba(255, 255, 255, 0.5);
             --text-dark: #1a1a2e;
-            --card-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
         }
 
         body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: 'Poppins', sans-serif;
+            color: var(--text-dark);
             background: linear-gradient(-45deg, #0f2027, #203a43, #2c5364, #244c7c);
             background-size: 400% 400%;
             animation: gradientBG 15s ease infinite;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            min-height: 100vh;
         }
 
         @keyframes gradientBG {
@@ -41,11 +35,9 @@
             100% { background-position: 0% 50%; }
         }
 
-        /* Navbar */
         .navbar-custom {
             background: rgba(23, 32, 51, 0.85);
             backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
             margin: 20px auto;
             border-radius: 50px;
             width: 95%;
@@ -53,428 +45,469 @@
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3), 0 0 15px rgba(215, 173, 67, 0.2);
             border: 1px solid rgba(255,255,255,0.15);
             padding: 10px 25px;
-            position: relative;
-            z-index: 10;
+        }
+        .navbar-brand {
+            color: #fff !important; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase;
+        }
+        .navbar-brand i { color: var(--gold); margin-right: 10px; }
+        .nav-link {
+            color: #e0e0e0 !important; font-weight: 600; border-radius: 30px; padding: 8px 20px !important; margin: 0 5px; transition: all 0.3s;
+        }
+        .nav-link:hover, .nav-link.active {
+            background: linear-gradient(45deg, var(--gold), #f3db7a); color: #111 !important;
         }
 
-        .navbar-custom .navbar-brand {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: #fff !important;
-            margin-right: 40px;
-            letter-spacing: 1.5px;
-            text-transform: uppercase;
-            background: linear-gradient(45deg, #ffffff, var(--gold));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+        .glass-container {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 40px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.18);
+            backdrop-filter: blur(18px);
+            margin: 40px auto 60px;
+            max-width: 1100px;
         }
 
-        .navbar-custom .navbar-brand i {
-            color: var(--gold);
-            -webkit-text-fill-color: initial;
-            margin-right: 10px;
-            animation: pulseIcon 2s infinite;
+        .btn-custom-primary {
+            background: linear-gradient(135deg, var(--brand-secondary), var(--brand-primary));
+            color: white; border: none; border-radius: 50px; font-weight: 600; transition: opacity 0.3s;
+        }
+        .btn-custom-primary:hover { opacity: 0.9; color: white; }
+
+        .btn-custom-warning {
+            background: linear-gradient(135deg, var(--gold), #f3db7a);
+            color: #111; border: none; border-radius: 50px; font-weight: 600; transition: opacity 0.3s;
+        }
+        .btn-custom-warning:hover { opacity: 0.9; color: #111; }
+
+        .metric-card {
+            background: #fff; border-radius: 16px; padding: 20px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.06);
+            border-bottom: 4px solid var(--brand-secondary); height: 100%;
+        }
+        .metric-card.highlight {
+            border-bottom: 4px solid var(--gold); background: #fdfcf7;
         }
 
-        .navbar-custom .nav-link {
-            color: #e0e0e0 !important;
-            font-weight: 600;
-            border-radius: 30px;
-            padding: 8px 20px !important;
-            margin: 0 5px;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        .equation-box {
+            background: #f0f4f8; padding: 20px; border-radius: 12px;
+            border-left: 5px solid var(--brand-secondary); font-family: 'Courier New', monospace;
+            font-size: 1.3rem; font-weight: 800; color: var(--brand-secondary);
         }
 
-        .navbar-custom .nav-link:hover,
-        .navbar-custom .nav-link.active {
-            background: linear-gradient(45deg, var(--gold), #f3db7a);
-            color: #111 !important;
+        .table-custom thead th {
+            background-color: var(--brand-secondary) !important; color: white !important; font-weight: 600; border: none;
         }
-
-        .header {
-            background: linear-gradient(135deg, var(--brand-primary) 0%, var(--brand-secondary) 100%);
-            color: white;
-            padding: 40px 0;
-            margin-bottom: 40px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25);
-        }
-
-        .header h1 {
-            font-size: 2.5rem;
-            font-weight: 700;
-            margin-bottom: 10px;
-        }
-
-        .header p {
-            font-size: 1.1rem;
-            opacity: 0.95;
-            margin: 0;
-        }
-
-        /* Evita el parpadeo de carga: Oculta el contenedor hasta que se arme */
-        #content-wrapper {
-            opacity: 0;
-            transition: opacity 0.4s ease-in;
-        }
-        
-        #content-wrapper.loaded {
-            opacity: 1;
-        }
-
-        .main-container {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 30px;
-            margin-bottom: 40px;
-        }
-
-        .card-custom {
-            background: white;
-            border-radius: 15px;
-            box-shadow: var(--card-shadow);
-            border: none;
-            overflow: hidden;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .card-custom:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
-        }
-
-        .card-header-custom {
-            background: linear-gradient(135deg, var(--brand-primary) 0%, var(--brand-secondary) 100%);
-            color: white;
-            padding: 25px;
-            font-size: 1.3rem;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .card-body-custom {
-            padding: 30px;
-        }
-
-        .form-group { margin-bottom: 25px; }
-        .form-label { display: block; font-weight: 600; color: #333; margin-bottom: 10px; font-size: 0.95rem; }
-        .form-control { border: 2px solid #e0e0e0; border-radius: 8px; padding: 12px 16px; font-size: 0.95rem; transition: all 0.3s ease; }
-        .form-control:focus { border-color: var(--brand-primary); box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.12); outline: none; }
-
-        .btn-submit {
-            background: linear-gradient(135deg, var(--brand-primary) 0%, var(--brand-secondary) 100%);
-            border: none; color: white; font-weight: 600; padding: 12px 32px; border-radius: 8px; cursor: pointer; font-size: 0.95rem;
-            transition: all 0.3s ease; display: inline-flex; align-items: center; gap: 8px; width: 100%; justify-content: center;
-        }
-        .btn-submit:hover {
-            background: linear-gradient(135deg, var(--brand-secondary) 0%, var(--brand-primary) 100%);
-            transform: translateY(-2px); box-shadow: 0 8px 16px rgba(0, 0, 0, 0.18); color: white;
-        }
-
-        .button-group { display: grid; grid-template-columns: 1fr; gap: 12px; margin-top: 20px; }
-
-        .results-section { display: none; }
-        .results-section.show { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; animation: slideInUp 0.6s ease; }
-
-        @keyframes slideInUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .result-box { background: white; border-radius: 15px; box-shadow: var(--card-shadow); padding: 30px; }
-        .result-title { font-size: 1.2rem; font-weight: 600; color: #333; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
-        
-        .equation-display {
-            background: linear-gradient(135deg, rgba(123, 23, 32, 0.08) 0%, rgba(36, 76, 124, 0.08) 100%);
-            border-left: 4px solid var(--brand-primary); padding: 20px; border-radius: 8px; font-family: 'Courier New', monospace;
-            font-size: 1.2rem; font-weight: 600; color: var(--brand-secondary); margin-bottom: 20px; overflow-x: auto;
-        }
-
-        .procedure-box { background: #ffffff; border: 1px solid #e0e0e0; border-left: 4px solid var(--accent-blue); border-radius: 8px; padding: 18px; margin-bottom: 20px; }
-        .procedure-box h3 { color: #333; font-size: 1rem; font-weight: 700; margin: 0 0 12px; display: flex; align-items: center; gap: 8px; }
-        .procedure-box ol { margin: 0; padding-left: 22px; }
-        .procedure-box li { color: #333; font-family: 'Courier New', monospace; font-size: 0.95rem; line-height: 1.55; margin-bottom: 8px; overflow-wrap: anywhere; }
-
-        .test-result { background: linear-gradient(135deg, rgba(79, 172, 254, 0.05) 0%, rgba(0, 242, 254, 0.05) 100%); border-left: 4px solid var(--accent-blue); padding: 20px; border-radius: 8px; margin-bottom: 20px; }
-        .test-result p { margin: 0; color: #333; font-size: 1rem; }
-        .test-result strong { color: var(--accent-blue); font-size: 1.1rem; }
-
-        .feature-list { background: #f8f9fa; border: 1px solid #e0e0e0; border-radius: 8px; padding: 16px 18px; margin-top: 20px; }
-        .feature-list h5 { color: #666; font-size: 0.9rem; text-transform: uppercase; margin: 0 0 12px; font-weight: 600; }
-        .feature-list ul { display: grid; gap: 8px; list-style: none; margin: 0; padding: 0; }
-        .feature-list li { display: flex; align-items: center; gap: 8px; color: #333; font-size: 0.95rem; }
-        .feature-list i { color: #198754; }
-
-        .chart-container { text-align: center; border-radius: 12px; overflow: hidden; background: #f8f9fa; padding: 15px; }
-        .chart-container img { max-width: 100%; height: auto; border-radius: 8px; }
-
-        .table-results { border-radius: 8px; overflow: hidden; }
-        .table-results thead { background: linear-gradient(135deg, var(--brand-primary) 0%, var(--brand-secondary) 100%); color: white; }
-        .table-results th { padding: 15px; font-weight: 600; text-align: center; border: none; }
-        .table-results td { padding: 12px 15px; text-align: center; border-color: #e0e0e0; }
-        .table-results tbody tr:hover { background-color: #f8f9fa; }
-
-        .alert-custom { border-radius: 12px; border: none; margin-bottom: 20px; padding: 16px 20px; font-weight: 500; }
-        .alert-danger { background-color: #fee; color: #c33; }
-        
-        .divider { height: 1px; background: linear-gradient(90deg, transparent, #ddd, transparent); margin: 25px 0; }
-
-        .point-input-row { display: grid; grid-template-columns: 1fr 1fr 40px; gap: 10px; align-items: flex-end; }
-        .point-input-row input { border: 2px solid #e0e0e0; border-radius: 8px; padding: 12px 16px; font-size: 0.95rem; transition: all 0.3s ease; }
-        .point-input-row input:focus { border-color: var(--brand-primary); box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.12); outline: none; }
-        .point-input-label { font-size: 0.85rem; color: #666; font-weight: 500; margin-bottom: 6px; display: block; }
-
-        .btn-remove-point { background-color: #dc3545; border: none; color: white; border-radius: 6px; cursor: pointer; padding: 10px 6px; font-size: 0.9rem; transition: background-color 0.3s ease; display: flex; align-items: center; justify-content: center; }
-        .btn-remove-point:hover { background-color: #c82333; }
-
-        .btn-add-point { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); border: none; color: white; font-weight: 600; padding: 10px 16px; border-radius: 8px; cursor: pointer; font-size: 0.9rem; transition: all 0.3s ease; display: inline-flex; align-items: center; gap: 8px; }
-        .btn-add-point:hover { background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%); transform: translateY(-2px); box-shadow: 0 8px 16px rgba(79, 172, 254, 0.3); }
-
-        @media (max-width: 1024px) {
-            .results-section.show { grid-template-columns: 1fr; }
-            .header h1 { font-size: 2rem; }
-        }
+        .table-custom tbody td { vertical-align: middle; }
     </style>
 </head>
 <body>
+    {% include "navbar.html" %}
 
-    {% include 'navbar.html' %}
-
-    <div id="content-wrapper">
-        <div class="header">
-            <div class="container">
-                <h1>{{ regression_name }}</h1>
-                <p>Ingresa tus datos y obtén el análisis de regresión en tiempo real</p>
-            </div>
+    <main class="container">
+        <div class="text-center text-white mt-5 mb-4">
+            <h1 class="display-4 fw-bold" style="text-shadow: 0 4px 10px rgba(0,0,0,0.3);">Regresión Lineal Simple</h1>
+            <p class="lead opacity-75">Ingresa tus puntos, calcula la recta y revisa el ajuste detallado con gráficos.</p>
         </div>
 
-        <div class="container">
-            {% with messages = get_flashed_messages(with_categories=true) %}
-                {% if messages %}
-                    {% for category, message in messages %}
-                        <div class="alert-custom alert-{{ category }} animate__animated animate__headShake">
-                            <i class="fas fa-exclamation-circle"></i> {{ message }}
-                        </div>
-                    {% endfor %}
-                {% endif %}
-            {% endwith %}
-
-            <div class="main-container">
-                <div class="card-custom animate__animated animate__fadeInUp" style="max-width: 600px; margin: 0 auto; width: 100%;">
-                    <div class="card-header-custom">
-                        <i class="fas fa-keyboard"></i>
-                        Datos de Entrada
+        <div class="glass-container">
+            <div class="border-bottom pb-4 mb-4">
+                <h2 class="h4 fw-bold text-dark mb-4"><i class="fas fa-edit me-2" style="color: var(--gold);"></i>1. Configuración de Datos</h2>
+                
+                <div class="row g-3 align-items-end">
+                    <div class="col-md-8">
+                        <label class="form-label fw-bold text-muted" for="nInput">Número de puntos (n)</label>
+                        <input class="form-control form-control-lg border-0 shadow-sm" id="nInput" type="number" min="2" step="1" placeholder="Ej. 5">
                     </div>
-                    
-                    <div class="card-body-custom">
-                        <form method="post" id="regressionForm">
-                            
-                            <div class="form-group">
-                                <label for="n_input" class="form-label">Número de puntos (n)</label>
-                                <input class="form-control" id="n_input" name="n" type="number"
-                                    min="{{ 3 if tipo == 'cuadratica' else 2 }}" step="1"
-                                    placeholder="Ej. 5" value="{{ n_value }}">
-                            </div>
-
-                            <div class="form-group">
-                                <label class="form-label">Puntos (x, y)</label>
-                                <div id="pointsContainer" style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 15px;">
-                                </div>
-                                
-                                <button type="button" class="btn-add-point" onclick="addPoint()" style="margin-bottom: 15px;">
-                                    <i class="fas fa-plus"></i> Agregar Punto
-                                </button>
-                            </div>
-
-                            <div class="divider"></div>
-
-                            <div class="form-group">
-                                <label for="x_test" class="form-label">Valor de x a probar (opcional)</label>
-                                <input class="form-control" id="x_test" name="x_test" type="number" step="any"
-                                    placeholder="Ej. 6" value="{{ x_test }}">
-                            </div>
-
-                            <div class="button-group">
-                                <button type="submit" class="btn-submit">
-                                    <i class="fas fa-calculator"></i> Calcular Regresión
-                                </button>
-                            </div>
-                        </form>
+                    <div class="col-md-4">
+                        <button class="btn btn-custom-warning btn-lg w-100 shadow-sm" id="generateBtn" type="button">
+                            <i class="fas fa-table me-2"></i> Generar tabla
+                        </button>
                     </div>
                 </div>
             </div>
 
-            {% if result_data %}
-            <div class="results-section show">
-                <div class="result-box">
-                    <h2 class="result-title"><i class="fas fa-check-circle" style="color: #4facfe;"></i> Ecuación de Ajuste</h2>
-                    
-                    <div class="equation-display">
-                        {{ result_data.equation }}
-                    </div>
+            <div id="messageBox" class="alert d-none fw-bold shadow-sm rounded-4" role="alert"></div>
 
-                    {% if result_data.steps %}
-                    <div class="procedure-box">
-                        <h3><i class="fas fa-list-ol" style="color: #4facfe;"></i> Procedimiento para llegar a la ecuación</h3>
-                        <ol>
-                            {% for step in result_data.steps %}
-                                <li>{{ step }}</li>
-                            {% endfor %}
-                        </ol>
-                    </div>
-                    {% endif %}
-
-                    <div class="feature-list">
-                        <h5>Resultado generado</h5>
-                        <ul>
-                            <li><i class="fas fa-check-circle"></i> Ecuación de ajuste</li>
-                            <li><i class="fas fa-check-circle"></i> Tabla de puntos originales</li>
-                            <li><i class="fas fa-check-circle"></i> Gráfico con puntos originales y curva de ajuste</li>
-                            {% if result_data.x_test is not none and result_data.y_test is not none %}
-                                <li><i class="fas fa-check-circle"></i> Punto probado en el gráfico</li>
-                            {% endif %}
-                        </ul>
-                    </div>
-
-                    {% if result_data.x_test is not none and result_data.y_test is not none %}
-                    <h5 style="color: #666; font-size: 0.9rem; text-transform: uppercase; margin-bottom: 12px; font-weight: 600; margin-top: 20px;">Predicción</h5>
-                    <div class="test-result">
-                        <p>Para <strong>x = {{ result_data.x_test }}</strong></p>
-                        <p style="font-size: 1.3rem; margin-top: 8px;">
-                            <strong>y ≈ {{ result_data.y_test|round(4) }}</strong>
-                        </p>
-                    </div>
-                    {% endif %}
-
-                    <div class="divider"></div>
-
-                    <h5 style="color: #666; font-size: 0.9rem; text-transform: uppercase; margin-bottom: 15px; font-weight: 600;">Puntos Utilizados</h5>
-                    <table class="table table-results">
+            <div id="tableArea" class="d-none pb-4 border-bottom mb-4">
+                <h3 class="h5 fw-bold text-dark mb-3"><i class="fas fa-list-ol me-2" style="color: var(--brand-primary);"></i>2. Ingreso de Valores</h3>
+                
+                <div class="table-responsive rounded-3 shadow-sm mb-4">
+                    <table class="table table-hover table-custom mb-0 text-center">
                         <thead>
                             <tr>
-                                <th style="width: 50%;">x</th>
-                                <th style="width: 50%;">y</th>
+                                <th class="py-3">Periodo (X)</th>
+                                <th class="py-3">Demanda (Y)</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            {% for x, y in result_data.points %}
-                                <tr>
-                                    <td><strong>{{ x }}</strong></td>
-                                    <td>{{ y }}</td>
-                                </tr>
-                            {% endfor %}
-                        </tbody>
+                        <tbody id="pointsBody" class="bg-white"></tbody>
                     </table>
                 </div>
 
-                <div class="result-box">
-                    <h2 class="result-title"><i class="fas fa-chart-line" style="color: #667eea;"></i> Gráfico Visual</h2>
-                    <div class="chart-container">
-                        <img src="{{ result_data.plot_url }}" alt="Gráfico de regresión">
+                <div class="row g-3 align-items-end">
+                    <div class="col-md-8">
+                        <label class="form-label fw-bold text-muted" for="xTestInput">Valor de x a predecir (opcional)</label>
+                        <input class="form-control form-control-lg border-0 shadow-sm" id="xTestInput" type="text" inputmode="decimal" placeholder="Ej. 6.5">
+                    </div>
+                    <div class="col-md-4">
+                        <button class="btn btn-custom-primary btn-lg w-100 shadow-sm" id="calculateBtn" type="button">
+                            <i class="fas fa-calculator me-2"></i> Calcular Regresión
+                        </button>
                     </div>
                 </div>
             </div>
-            {% endif %}
+
+            <div id="resultsArea" class="d-none mt-2">
+                <h3 class="h4 fw-bold text-dark mb-4"><i class="fas fa-chart-line me-2" style="color: var(--brand-secondary);"></i>3. Resultados del Análisis</h3>
+                
+                <div class="row g-4 mb-4 text-center">
+                    <div class="col-6 col-md-3">
+                        <div class="metric-card">
+                            <span class="d-block text-muted small fw-bold text-uppercase mb-2">Intercepto (a)</span>
+                            <strong class="fs-4 text-dark text-break" id="aResult"></strong>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <div class="metric-card">
+                            <span class="d-block text-muted small fw-bold text-uppercase mb-2">Pendiente (b)</span>
+                            <strong class="fs-4 text-dark text-break" id="bResult"></strong>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <div class="metric-card">
+                            <span class="d-block text-muted small fw-bold text-uppercase mb-2">R²</span>
+                            <strong class="fs-4 text-dark text-break" id="r2Result"></strong>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <div class="metric-card highlight">
+                            <span class="d-block text-warning small fw-bold text-uppercase mb-2" style="color: #b38b22 !important;">Predicción</span>
+                            <strong class="fs-4 text-dark text-break" id="predictionResult"></strong>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-5 text-center">
+                    <span class="d-block text-muted small fw-bold text-uppercase mb-2">Ecuación de Ajuste</span>
+                    <div id="equationResult" class="equation-box d-inline-block shadow-sm"></div>
+                </div>
+
+                <div class="mb-5">
+                    <h4 class="h5 fw-bold text-dark mb-3"><i class="fas fa-chart-area me-2"></i>Gráfico de Regresión</h4>
+                    <div class="bg-white p-4 border rounded-4 shadow-sm text-center">
+                        <canvas id="regressionChart" style="max-height: 450px; w-100"></canvas>
+                    </div>
+                </div>
+
+                <div>
+                    <h4 class="h5 fw-bold text-dark mb-3"><i class="fas fa-table me-2"></i>Detalle Matemático (x, y, xy, x², y²)</h4>
+                    <div class="table-responsive rounded-3 shadow-sm border">
+                        <table class="table table-bordered table-hover table-custom mb-0 text-center">
+                            <thead>
+                                <tr>
+                                    <th class="py-3">Periodo (x)</th>
+                                    <th class="py-3">Demanda (y)</th>
+                                    <th class="py-3">xy</th>
+                                    <th class="py-3">x²</th>
+                                    <th class="py-3">y²</th>
+                                    <th class="py-3" style="background-color: var(--gold) !important; color: #111 !important;">Pronóstico (Y)</th>
+                                </tr>
+                            </thead>
+                            <tbody id="detailedTableBody" class="bg-white"></tbody>
+                            <tfoot id="detailedTableFoot" style="background-color: #f8f9fa;"></tfoot>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
         </div>
-    </div> <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         window.pageInit = function() {
-            const initialPointsX = {{ points_x|tojson }};
-            const initialPointsY = {{ points_y|tojson }};
-            const initialN = {{ n_value|default('null')|tojson }};
-            const minN = {{ 3 if tipo == 'cuadratica' else 2 }};
+            const nInput = document.getElementById("nInput");
+            const generateBtn = document.getElementById("generateBtn");
+            const calculateBtn = document.getElementById("calculateBtn");
+            const tableArea = document.getElementById("tableArea");
+            const pointsBody = document.getElementById("pointsBody");
+            const xTestInput = document.getElementById("xTestInput");
+            const resultsArea = document.getElementById("resultsArea");
+            const messageBox = document.getElementById("messageBox");
 
-            function hasSavedPoints() {
-                if (!initialPointsX || initialPointsX.length === 0) return false;
-                return initialPointsX.some(v => v !== null && String(v).trim() !== '');
+            const aResult = document.getElementById("aResult");
+            const bResult = document.getElementById("bResult");
+            const r2Result = document.getElementById("r2Result");
+            const predictionResult = document.getElementById("predictionResult");
+            const equationResult = document.getElementById("equationResult");
+            
+            const detailedTableBody = document.getElementById("detailedTableBody");
+            const detailedTableFoot = document.getElementById("detailedTableFoot");
+
+            let chartInstance = null; // Variable para almacenar el gráfico y poder actualizarlo
+
+            function showMessage(message, type) {
+                messageBox.className = `alert ${type === "error" ? "alert-danger border-danger" : "alert-success border-success"} fw-bold shadow-sm rounded-4`;
+                messageBox.innerHTML = `<i class="fas ${type === "error" ? "fa-triangle-exclamation" : "fa-circle-check"} me-2"></i>${message}`;
             }
 
-            function initializePoints() {
-                const container = document.getElementById('pointsContainer');
-                if (!container) return;
-                
-                while (container.firstChild) {
-                    container.removeChild(container.firstChild);
-                }
-                
-                if (initialN !== null && String(initialN).trim() !== '') {
-                    let rows = parseInt(initialN) || minN;
-                    if (rows < minN) rows = minN;
-                    for (let i = 0; i < rows; i++) addPoint();
-                } else if (hasSavedPoints()) {
-                    for (let i = 0; i < initialPointsX.length; i++) {
-                        addPoint({x: initialPointsX[i], y: initialPointsY[i]});
-                    }
-                } else {
-                    for (let i = 0; i < minN; i++) addPoint();
-                }
-
-                // Mostrar el contenido suavemente una vez que los puntos están inyectados
-                setTimeout(() => {
-                    document.getElementById('content-wrapper').classList.add('loaded');
-                }, 50);
+            function clearMessage() {
+                messageBox.classList.add("d-none");
+                messageBox.textContent = "";
             }
 
-            function addPoint(point = null) {
-                const container = document.getElementById('pointsContainer');
-                if (!container) return;
-                const row = document.createElement('div');
-                row.className = 'point-input-row';
-                row.innerHTML = `
-                    <div>
-                        <label class="point-input-label">X</label>
-                        <input type="number" name="x[]" step="any" placeholder="Ej. 1" value="${point && point.x !== null ? point.x : ''}" required>
-                    </div>
-                    <div>
-                        <label class="point-input-label">Y</label>
-                        <input type="number" name="y[]" step="any" placeholder="Ej. 2" value="${point && point.y !== null ? point.y : ''}" required>
-                    </div>
-                    <button type="button" class="btn-remove-point" onclick="removePoint(this)">
-                        <i class="fas fa-trash"></i>
-                    </button>
-                `;
-                container.appendChild(row);
+            function isValidNumber(value) {
+                return value !== "" && Number.isFinite(Number(value));
             }
 
-            window.addPoint = addPoint;
+            function formatNumber(value, decimals = 2) {
+                return Number(value).toLocaleString('es-ES', { minimumFractionDigits: decimals, maximumFractionDigits: decimals });
+            }
 
-            window.removePoint = function(button) {
-                const container = document.getElementById('pointsContainer');
-                const nInput = document.getElementById('n_input');
-                const minRows = minN;
-                if (!container || container.children.length <= minRows) {
-                    return; // No se puede eliminar si es el mínimo
+            function getN() {
+                const n = Number(nInput.value);
+                if (!Number.isInteger(n) || n < 2) {
+                    throw new Error("Ingresa un número entero positivo mayor o igual a 2.");
                 }
-                button.closest('.point-input-row').remove();
-                if (nInput && !isNaN(parseInt(nInput.value))) {
-                    nInput.value = Math.max(minRows, container.children.length);
-                }
-            };
+                return n;
+            }
 
-            const nInput = document.getElementById('n_input');
-            if (nInput) {
-                nInput.addEventListener('change', function() {
-                    let desired = parseInt(nInput.value) || 0;
-                    if (desired < minN) desired = minN;
-                    const container = document.getElementById('pointsContainer');
+            function generateTable() {
+                clearMessage();
+                tableArea.classList.add("d-none");
+                resultsArea.classList.add("d-none");
+
+                try {
+                    const n = getN();
+                    pointsBody.innerHTML = "";
                     
-                    while (container.children.length < desired) addPoint();
-                    while (container.children.length > desired) {
-                        container.lastElementChild.remove();
+                    for (let index = 0; index < n; index += 1) {
+                        const row = document.createElement("tr");
+                        row.innerHTML = `
+                            <td class="p-2 border-end"><input class="form-control text-center fw-bold point-x border-0 bg-light" type="text" inputmode="decimal" placeholder="x${index + 1}"></td>
+                            <td class="p-2"><input class="form-control text-center fw-bold point-y border-0 bg-light" type="text" inputmode="decimal" placeholder="y${index + 1}"></td>
+                        `;
+                        pointsBody.appendChild(row);
+                    }
+
+                    tableArea.classList.remove("d-none");
+                    showMessage(`Tabla generada correctamente. Ingresa tus datos.`, "success");
+
+                } catch (error) {
+                    showMessage(error.message, "error");
+                }
+            }
+
+            function collectPoints() {
+                const xInputs = Array.from(document.querySelectorAll(".point-x"));
+                const yInputs = Array.from(document.querySelectorAll(".point-y"));
+
+                if (xInputs.length === 0 || yInputs.length === 0) {
+                    throw new Error("Primero genera la tabla de puntos.");
+                }
+
+                return xInputs.map((xInput, index) => {
+                    const xValue = xInput.value.trim().replace(',', '.');
+                    const yValue = yInputs[index].value.trim().replace(',', '.');
+
+                    if (!isValidNumber(xValue) || !isValidNumber(yValue)) {
+                        throw new Error(`Revisa la fila ${index + 1}. Ambos valores deben ser numéricos.`);
+                    }
+
+                    return { x: Number(xValue), y: Number(yValue) };
+                });
+            }
+
+            async function calculateRegression() {
+                clearMessage();
+                resultsArea.classList.add("d-none");
+
+                try {
+                    const n = getN();
+                    const points = collectPoints();
+                    let xTestValue = xTestInput.value.trim().replace(',', '.');
+
+                    if (xTestValue !== "" && !isValidNumber(xTestValue)) {
+                        throw new Error("El valor de predicción debe ser numérico o dejarse vacío.");
+                    }
+
+                    // Petición al backend Flask
+                    const response = await fetch("/api/regresion-lineal", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ n, points, x_test: xTestValue }),
+                    });
+
+                    const data = await response.json();
+                    
+                    if (!response.ok || !data.ok) {
+                        throw new Error(data.message || "No se pudo calcular la regresión en el servidor.");
+                    }
+
+                    renderResults(data.result, points, xTestValue);
+                    showMessage("Análisis de regresión ejecutado con éxito.", "success");
+                    
+                } catch (error) {
+                    showMessage(error.message, "error");
+                }
+            }
+
+            function renderResults(result, points, xTestValue) {
+                // 1. Métricas
+                aResult.textContent = formatNumber(result.a, 4);
+                bResult.textContent = formatNumber(result.b, 4);
+                r2Result.textContent = formatNumber(result.r2, 4);
+                equationResult.textContent = result.equation;
+
+                if (Object.prototype.hasOwnProperty.call(result, "y_pred")) {
+                    predictionResult.textContent = formatNumber(result.y_pred, 2);
+                } else {
+                    predictionResult.textContent = "N/A";
+                }
+
+                // 2. Generar Tabla Detallada
+                detailedTableBody.innerHTML = "";
+                let sumX = 0, sumY = 0, sumXY = 0, sumX2 = 0, sumY2 = 0, sumPred = 0;
+
+                points.forEach((p, index) => {
+                    const xy = p.x * p.y;
+                    const x2 = p.x * p.x;
+                    const y2 = p.y * p.y;
+                    const predY = result.a + (result.b * p.x);
+
+                    sumX += p.x; sumY += p.y; sumXY += xy; sumX2 += x2; sumY2 += y2; sumPred += predY;
+
+                    const row = document.createElement("tr");
+                    row.innerHTML = `
+                        <td><span class="text-muted small me-2">(x${index + 1})</span> ${formatNumber(p.x, 2)}</td>
+                        <td>${formatNumber(p.y, 2)}</td>
+                        <td>${formatNumber(xy, 2)}</td>
+                        <td>${formatNumber(x2, 2)}</td>
+                        <td>${formatNumber(y2, 2)}</td>
+                        <td class="fw-bold" style="background-color: #fdfaf2;">${formatNumber(predY, 2)}</td>
+                    `;
+                    detailedTableBody.appendChild(row);
+                });
+
+                detailedTableFoot.innerHTML = `
+                    <tr class="fw-bold">
+                        <td class="py-3">${formatNumber(sumX, 2)}</td>
+                        <td class="py-3">${formatNumber(sumY, 2)}</td>
+                        <td class="py-3">${formatNumber(sumXY, 2)}</td>
+                        <td class="py-3">${formatNumber(sumX2, 2)}</td>
+                        <td class="py-3">${formatNumber(sumY2, 2)}</td>
+                        <td class="py-3 text-dark" style="background-color: #f3db7a;">${formatNumber(sumPred, 2)}</td>
+                    </tr>
+                `;
+
+                // 3. Generar Gráfico Interactivo con Chart.js
+                drawChart(points, result, xTestValue);
+
+                // Mostrar Resultados
+                resultsArea.classList.remove("d-none");
+                resultsArea.scrollIntoView({ behavior: 'smooth' });
+            }
+
+            function drawChart(points, result, xTestValue) {
+                const ctx = document.getElementById('regressionChart').getContext('2d');
+                
+                // Si existe un gráfico previo, lo destruimos
+                if (chartInstance) {
+                    chartInstance.destroy();
+                }
+
+                // Datos de Puntos Originales
+                const scatterData = points.map(p => ({x: p.x, y: p.y}));
+                
+                // Datos de la Línea de Ajuste (Desde el X mínimo al X máximo para que cubra todo)
+                // Se agrega un pequeño margen a los extremos
+                const minX = Math.min(...points.map(p => p.x)) * 0.9;
+                const maxX = Math.max(...points.map(p => p.x), xTestValue ? Number(xTestValue) : 0) * 1.1;
+                
+                const lineData = [
+                    {x: minX, y: result.a + (result.b * minX)},
+                    {x: maxX, y: result.a + (result.b * maxX)}
+                ];
+
+                const datasets = [
+                    {
+                        type: 'scatter',
+                        label: 'Puntos Originales (x, y)',
+                        data: scatterData,
+                        backgroundColor: '#1f5e7e',
+                        pointRadius: 6,
+                        pointHoverRadius: 8
+                    },
+                    {
+                        type: 'line',
+                        label: 'Curva de Ajuste (y = a + bx)',
+                        data: lineData,
+                        borderColor: '#d7ad43',
+                        borderWidth: 2,
+                        fill: false,
+                        pointRadius: 0 // Ocultar puntos en la línea
+                    }
+                ];
+
+                // Si hay un punto de prueba, agregarlo como dataset independiente para la rúbrica
+                if (xTestValue !== "" && Object.prototype.hasOwnProperty.call(result, "y_pred")) {
+                    datasets.push({
+                        type: 'scatter',
+                        label: `Punto a Probar (x=${xTestValue})`,
+                        data: [{x: Number(xTestValue), y: result.y_pred}],
+                        backgroundColor: '#dc3545', // Color rojo para resaltar
+                        borderColor: '#fff',
+                        borderWidth: 2,
+                        pointRadius: 9,
+                        pointHoverRadius: 11,
+                        pointStyle: 'rectRot' // Forma de diamante
+                    });
+                }
+
+                // Crear el gráfico
+                chartInstance = new Chart(ctx, {
+                    data: {
+                        datasets: datasets
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            x: {
+                                type: 'linear',
+                                position: 'bottom',
+                                title: { display: true, text: 'Periodo (X)', font: { weight: 'bold' } }
+                            },
+                            y: {
+                                title: { display: true, text: 'Demanda (Y)', font: { weight: 'bold' } }
+                            }
+                        },
+                        plugins: {
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        return `(${context.parsed.x.toFixed(2)}, ${context.parsed.y.toFixed(2)})`;
+                                    }
+                                }
+                            },
+                            legend: {
+                                position: 'top',
+                                labels: { font: { family: 'Poppins' } }
+                            }
+                        }
                     }
                 });
             }
 
-            initializePoints();
+            // Listeners
+            generateBtn.addEventListener("click", generateTable);
+            calculateBtn.addEventListener("click", calculateRegression);
         };
 
-        if (document.readyState === 'complete' || document.readyState === 'interactive') {
-            if (typeof window.pageInit === 'function') window.pageInit();
+        if (document.readyState === "loading") {
+            document.addEventListener("DOMContentLoaded", window.pageInit);
         } else {
-            document.addEventListener('DOMContentLoaded', function() {
-                if (typeof window.pageInit === 'function') window.pageInit();
-            });
+            window.pageInit();
         }
     </script>
 </body>
